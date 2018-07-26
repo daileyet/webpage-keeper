@@ -7,7 +7,7 @@
 	<version>1.1</version>
 	<name>webpage-keeper</name>
 	<url>https://github.com/daileyet/webpage-keeper.git</url>
-	
+	<description>The auto download library for web site</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
