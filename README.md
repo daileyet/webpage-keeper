@@ -88,4 +88,4 @@ When you set download book save directory as W:\Book on windows OS or /Book on L
 |---- ...
 ```
 ### Reference project
-This project has been used as a lib in [SafaribooksonlineGetter4J](https://github.com/open-thinks/SafaribooksonlineGetter4Jeduler) system.
+This project has been used as a lib in [SafaribooksonlineGetter4J](https://github.com/daileyet/SafaribooksonlineGetter4J) system.
