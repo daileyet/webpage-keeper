@@ -34,9 +34,9 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.openthinks.libs.utilities.CommonUtilities;
 import com.openthinks.libs.utilities.logger.ProcessLogger;
-import com.openthinks.others.webpages.HtmlPageTransfer;
 import com.openthinks.others.webpages.keeper.HtmlResourceKeeper;
 import com.openthinks.others.webpages.keeper.ResourceKeep;
+import com.openthinks.others.webpages.transfer.HtmlPageTransfer;
 
 /**
  * The resource agent for HTML page

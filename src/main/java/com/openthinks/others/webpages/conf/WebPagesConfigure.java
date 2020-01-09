@@ -1,4 +1,4 @@
-package com.openthinks.others.webpages;
+package com.openthinks.others.webpages.conf;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.Properties;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.openthinks.libs.utilities.Result;
 import com.openthinks.libs.utilities.logger.PLLevel;
+import com.openthinks.others.webpages.WebPagesLaunch;
 
 /**
  * The configuration for {@link WebPagesLaunch}
@@ -32,7 +33,7 @@ public class WebPagesConfigure extends Properties {
       return host;
     }
 
-    public void setHost(String host) {
+    void setHost(String host) {
       this.host = host;
     }
 
@@ -40,7 +41,7 @@ public class WebPagesConfigure extends Properties {
       return port;
     }
 
-    public void setPort(Integer port) {
+    void setPort(Integer port) {
       this.port = port;
     }
 
@@ -48,7 +49,15 @@ public class WebPagesConfigure extends Properties {
       return auth;
     }
 
-    public void setAuth(Auth auth) {
+    public String getAuthName() {
+      return auth == null ? null : auth.name;
+    }
+
+    public String getAuthPass() {
+      return auth == null ? null : auth.pass;
+    }
+
+    void setAuth(Auth auth) {
       this.auth = auth;
     }
 
@@ -72,6 +81,7 @@ public class WebPagesConfigure extends Properties {
   public static final String LOGINNAMEVALUE = "login-form-username-input-value";
   public static final String LOGINPASSVALUE = "login-form-password-input-value";
   public static final String KEEPDIR = "save-dir";
+  public static final String BOOKNAME = "pages-name";
   public static final String NEEDLOGIN = "need-login";
   public static final String CATALOGPAGEURL = "pages-catalog-url";
   public static final String PAGELINKOFCATALOGSELECTOR = "catalog-pagelinks-selector";
@@ -79,8 +89,12 @@ public class WebPagesConfigure extends Properties {
   public static final String NEXTCHAINPAGEANCHORSELECTOR = "pages-next-anchor-selector";
   public static final String LOGGERLEVEL = "logger-level";
   public static final String SESSION_TIMEOUT = "session-timeout";
-
+  public static final String ATTR_VALUE_SPLIT_TOKEN = ";";
+  // group task which need go to download book
+  public static final String DOWNLOADGROUPTASKDIR = "group-task-dir";
   public static final long DEFAULT_SESSION_TIMEOUT = 30 * 60 * 1000;
+
+  protected transient DownloadBookTaskInfo bookTaskInfo = null;
 
   ///////////////////////////
   public static WebPagesConfigure create() {
@@ -286,6 +300,30 @@ public class WebPagesConfigure extends Properties {
 
   public void setKeepDir(String value) {
     setProperty(KEEPDIR, value);
+  }
+
+  public Optional<String> getBookName() {
+    return getProp(BOOKNAME);
+  }
+
+  public void setBookName(String value) {
+    setProperty(BOOKNAME, value);
+  }
+
+  public Optional<String> getGroupTaskDir() {
+    return getProp(DOWNLOADGROUPTASKDIR);
+  }
+
+  public void setGroupTaskDir(String value) {
+    setProperty(DOWNLOADGROUPTASKDIR, value);
+  }
+
+  public void setBookTaskInfo(final DownloadBookTaskInfo bookTaskInfo) {
+    this.bookTaskInfo = bookTaskInfo;
+  }
+
+  public Optional<DownloadBookTaskInfo> getBookTaskInfo() {
+    return Optional.ofNullable(bookTaskInfo);
   }
 
   public Optional<Boolean> needLogin() {

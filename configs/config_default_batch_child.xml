@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="catalog-pagelinks-selector">div.catalog_container a[href*='9781449335649']</entry>
+<entry key="pages-catalog-url">http://techbus.safaribooksonline.com/book/programming/c/9781449335649</entry>
+<entry key="pages-name">Head_First_C</entry>
+<entry key="is-processed">true</entry>
+</properties>

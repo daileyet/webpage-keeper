@@ -33,8 +33,8 @@
 <entry key="login-form-password-input-value"></entry>
 <!--[required]the login page form submit button name-->
 <entry key="login-form-submit-name"></entry>
-<!--[required]download book name and save to local fold name-->
-<entry key="safaribook-name">Head First C</entry>
+<!--[option]download pages name and save to local fold name-->
+<entry key="pages-name">Head First C</entry>
 
 <!--option when the first page url configured-->
 <!--The catalog page url-->

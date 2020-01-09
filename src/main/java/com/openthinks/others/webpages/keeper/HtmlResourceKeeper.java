@@ -39,10 +39,10 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.openthinks.libs.utilities.CommonUtilities;
 import com.openthinks.libs.utilities.logger.ProcessLogger;
-import com.openthinks.others.webpages.HtmlPageTransfer;
 import com.openthinks.others.webpages.additional.AdditionalBooks;
 import com.openthinks.others.webpages.additional.AdditionalProcessor;
 import com.openthinks.others.webpages.agent.HtmlResourceAgent;
+import com.openthinks.others.webpages.transfer.HtmlPageTransfer;
 import com.openthinks.others.webpages.util.ResourceInfo;
 
 /**
