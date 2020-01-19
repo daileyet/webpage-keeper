@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Optional;
-import java.util.Properties;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.openthinks.libs.utilities.Result;
 import com.openthinks.libs.utilities.logger.PLLevel;
@@ -17,7 +16,7 @@ import com.openthinks.others.webpages.WebPagesLaunch;
  * @author dailey.yet@outlook.com
  *
  */
-public class WebPagesConfigure extends Properties {
+public class WebPagesConfigure extends Config {
 
   public class Proxy {
     public class Auth {
@@ -67,30 +66,59 @@ public class WebPagesConfigure extends Properties {
   }
 
   private static final long serialVersionUID = 1571830072530562701L;
+  @ConfigDesc("[option]Browser client: FF45; FF52; IE; EDGE; CHROME")
   public static final String BROWSERVERSION = "browser-version";
+  @ConfigDesc("[option]proxy host if present")
   public static final String PROXYHOST = "proxy-host";
+  @ConfigDesc("[option]proxy host port")
   public static final String PROXYPORT = "proxy-port";
+  @ConfigDesc("[option]proxy auth user name")
   public static final String PROXYAUTHNAME = "proxy-auth-user";
+  @ConfigDesc("[option]proxy auth pass")
   public static final String PROXYAUTHPASS = "proxy-auth-pass";
+  @ConfigDesc("[required when need login]the login page url")
   public static final String LOGINPAGEURL = "login-url";
+  @ConfigDesc("[required when need login]the login page form css selector")
   public static final String LOGINFORMSELECTOR = "login-form-selector";
+  @ConfigDesc("[option]the login page form index")
   public static final String LOGINFROMINDEX = "login-form-index";
+  @ConfigDesc("[required when need login]the login page form submit button name")
   public static final String LOGINSUBMITBTNNAME = "login-form-submit-name";
+  @ConfigDesc("[required when need login]the login page form submit button selector")
+  public static final String LOGINSUBMITBTNSELECTOR = "login-form-submit-selector";
+  @ConfigDesc("[required when need login]the login page form user name input name")
   public static final String LOGINNAMEINPUTNAME = "login-form-username-input-name";
+  @ConfigDesc("[required when need login]the login page form user name input selector")
+  public static final String LOGINNAMEINPUTSELECTOR = "login-form-username-input-selector";
+  @ConfigDesc("[required when need login]the login page form user pass input name")
   public static final String LOGINPASSINPUTNAME = "login-form-password-input-name";
+  @ConfigDesc("[required when need login]the login page form user pass input selector")
+  public static final String LOGINPASSINPUTSELECTOR = "login-form-password-input-selector";
+  @ConfigDesc("[required when need login]the login page form user name value")
   public static final String LOGINNAMEVALUE = "login-form-username-input-value";
+  @ConfigDesc("[required when need login]the login page form user pass value")
   public static final String LOGINPASSVALUE = "login-form-password-input-value";
+  @ConfigDesc("[required]download save directory")
   public static final String KEEPDIR = "save-dir";
+  @ConfigDesc("[required]download pages name")
   public static final String BOOKNAME = "pages-name";
+  @ConfigDesc("[required]identity the authorized for the download pages")
   public static final String NEEDLOGIN = "need-login";
+  @ConfigDesc("[option when the first page url was configured]The catalog page url")
   public static final String CATALOGPAGEURL = "pages-catalog-url";
+  @ConfigDesc("[option when the first page url was configured]The css selector for each download page anchor on catalog page")
   public static final String PAGELINKOFCATALOGSELECTOR = "catalog-pagelinks-selector";
+  @ConfigDesc("[option when the catalog page url was configured]The first page url")
   public static final String STARTCHAINPAGEURL = "pages-first-url";
+  @ConfigDesc("[option when the catalog page url was configured]The css selector for next chain page anchor on each page")
   public static final String NEXTCHAINPAGEANCHORSELECTOR = "pages-next-anchor-selector";
+  @ConfigDesc("[Option]show message in CMD")
   public static final String LOGGERLEVEL = "logger-level";
+  @ConfigDesc("[Option]session timeout")
   public static final String SESSION_TIMEOUT = "session-timeout";
   public static final String ATTR_VALUE_SPLIT_TOKEN = ";";
   // group task which need go to download book
+  @ConfigDesc("[Option when downloading page was configured]sub tasks configure directory")
   public static final String DOWNLOADGROUPTASKDIR = "group-task-dir";
   public static final long DEFAULT_SESSION_TIMEOUT = 30 * 60 * 1000;
 
@@ -257,6 +285,15 @@ public class WebPagesConfigure extends Properties {
     setProperty(LOGINSUBMITBTNNAME, value);
   }
 
+  public Optional<String> getLoginSubmitBtnSelector() {
+    // return Optional.of("login");
+    return getProp(LOGINSUBMITBTNSELECTOR);
+  }
+
+  public void setLoginSubmitBtnSelector(String value) {
+    setProperty(LOGINSUBMITBTNSELECTOR, value);
+  }
+
   public Optional<String> getLoginAuthInputName() {
     // return Optional.of("email");
     return getProp(LOGINNAMEINPUTNAME);
@@ -264,6 +301,15 @@ public class WebPagesConfigure extends Properties {
 
   public void setLoginAuthInputName(String value) {
     setProperty(LOGINNAMEINPUTNAME, value);
+  }
+
+  public Optional<String> getLoginAuthInputSelector() {
+    // return Optional.of("email");
+    return getProp(LOGINNAMEINPUTSELECTOR);
+  }
+
+  public void setLoginAuthInputSelector(String value) {
+    setProperty(LOGINNAMEINPUTSELECTOR, value);
   }
 
   public Optional<String> getLoginAuthInputValue() {
@@ -281,6 +327,15 @@ public class WebPagesConfigure extends Properties {
 
   public void setLoginAuthPassInputName(String value) {
     setProperty(LOGINPASSINPUTNAME, value);
+  }
+
+  public Optional<String> getLoginAuthPassInputSelector() {
+    // return Optional.of("password1");
+    return getProp(LOGINPASSINPUTSELECTOR);
+  }
+
+  public void setLoginAuthPassInputSelector(String value) {
+    setProperty(LOGINPASSINPUTSELECTOR, value);
   }
 
   public Optional<String> getLoginAuthPassInputValue() {
@@ -346,7 +401,6 @@ public class WebPagesConfigure extends Properties {
   }
 
   public Optional<String> getPageLinkOfCatalogSelector() {
-    // return Optional.of("div.catalog_container a[href*='9781491901939']");
     return getProp(PAGELINKOFCATALOGSELECTOR);
   }
 
@@ -355,7 +409,6 @@ public class WebPagesConfigure extends Properties {
   }
 
   public Optional<String> getStartChainPageUrl() {
-
     return getProp(STARTCHAINPAGEURL);
   }
 
@@ -364,7 +417,6 @@ public class WebPagesConfigure extends Properties {
   }
 
   public Optional<String> getNextChainPageAnchorSelector() {
-    // return Optional.of("a.next[title*='Next (Key: n)']");
     return getProp(NEXTCHAINPAGEANCHORSELECTOR);
   }
 

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Optional;
-import java.util.Properties;
 import com.openthinks.libs.utilities.logger.ProcessLogger;
 
 /**
@@ -15,14 +14,21 @@ import com.openthinks.libs.utilities.logger.ProcessLogger;
  * @author dailey.dai@openthinks.com
  *
  */
-public class DownloadBookTaskInfo extends Properties {
+public class DownloadBookTaskInfo extends Config {
   private static final long serialVersionUID = -2676260790818380174L;
 
   public static final String CONFIG_PROPERTIES = ".properties";
   public static final String CONFIG_XML = ".xml";
+  @ConfigDesc("[required]download pages name")
   public static final String BOOKNAME = "pages-name";
+  @ConfigDesc("[option when the first page url was configured]The catalog page url")
   public static final String CATALOGPAGEURL = "pages-catalog-url";
+  @ConfigDesc("[option when the first page url was configured]The css selector for each download page anchor on catalog page")
   public static final String PAGELINKOFCATALOGSELECTOR = "catalog-pagelinks-selector";
+  @ConfigDesc("[option when the catalog page url was configured]The first page url")
+  public static final String STARTCHAINPAGEURL = "pages-first-url";
+  @ConfigDesc("[option when the catalog page url was configured]The css selector for next chain page anchor on each page")
+  public static final String NEXTCHAINPAGEANCHORSELECTOR = "pages-next-anchor-selector";
   public static final String DOWNLOADED = "is-processed";
 
   private File storeFile = null;
@@ -52,12 +58,27 @@ public class DownloadBookTaskInfo extends Properties {
   }
 
   public Optional<String> getPageLinkOfCatalogSelector() {
-    // return Optional.of("div.catalog_container a[href*='9781491901939']");
     return getProp(PAGELINKOFCATALOGSELECTOR);
   }
 
   public void setPageLinkOfCatalogSelector(String value) {
     setProperty(PAGELINKOFCATALOGSELECTOR, value);
+  }
+
+  public Optional<String> getStartChainPageUrl() {
+    return getProp(STARTCHAINPAGEURL);
+  }
+
+  public void setStartChainPageUrl(String value) {
+    setProperty(STARTCHAINPAGEURL, value);
+  }
+
+  public Optional<String> getNextChainPageAnchorSelector() {
+    return getProp(NEXTCHAINPAGEANCHORSELECTOR);
+  }
+
+  public void setNextChainPageAnchorSelector(String value) {
+    setProperty(NEXTCHAINPAGEANCHORSELECTOR, value);
   }
 
   public Optional<String> getIsProcessed() {

@@ -17,11 +17,10 @@ import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
-import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import com.openthinks.libs.utilities.CommonUtilities;
 import com.openthinks.libs.utilities.Result;
 import com.openthinks.libs.utilities.logger.ProcessLogger;
@@ -197,51 +196,87 @@ public class WebPagesLaunch implements Launch {
       throw new LostConfigureItemException("Lost configuration for login page url.");
     if (!config.getLoginFormSelector().isPresent())
       throw new LostConfigureItemException("Lost configuration for login form selector.");
-    if (!config.getLoginAuthInputName().isPresent())
-      throw new LostConfigureItemException("Lost configuration for the input name of login name.");
+    if (!config.getLoginAuthInputName().isPresent()
+        && !config.getLoginAuthInputSelector().isPresent())
+      throw new LostConfigureItemException(
+          "Lost configuration for the input name/selector of login name.");
     if (!config.getLoginAuthInputValue().isPresent())
       throw new LostConfigureItemException("Lost configuration for the input value of login name.");
-    if (!config.getLoginAuthPassInputName().isPresent())
+    if (!config.getLoginAuthPassInputName().isPresent()
+        && !config.getLoginAuthPassInputSelector().isPresent())
       throw new LostConfigureItemException(
-          "Lost configuration for the input name of login password.");
+          "Lost configuration for the input name/selector of login password.");
     if (!config.getLoginAuthPassInputValue().isPresent())
       throw new LostConfigureItemException(
           "Lost configuration for the input value of login password.");
-    if (!config.getLoginSubmitBtnName().isPresent())
+    if (!config.getLoginSubmitBtnName().isPresent()
+        && !config.getLoginSubmitBtnSelector().isPresent())
       throw new LostConfigureItemException(
-          "Lost configuration for the input name of login submit.");
+          "Lost configuration for the submit name/selector of login submit.");
     checkRuning();
     // get login page
-    final HtmlPage loginPage = webClient.getPage(config.getLoginPageUrl().get());
+    HtmlPage loginPage = webClient.getPage(config.getLoginPageUrl().get());
     ProcessLogger.debug("Login page load success:" + (loginPage != null));
     // ProcessLogger.debug("Login page source:\n" + loginPage.getTextContent());
     // get login form element
+    loginPage = processBeforeLogin(loginPage, webClient);
     HtmlForm loginForm = null;
     String formSel = config.getLoginFormSelector().get();
     DomNodeList<DomNode> elements = loginPage.getBody().querySelectorAll(formSel);
     ProcessLogger.debug("Login form in login page found(1):" + !elements.isEmpty());
-    loginForm = elements.isEmpty() ? null : (HtmlForm) elements.get(config.getLoginFormIndex());
+    loginForm = elements.isEmpty() ? null : (HtmlForm) elements.get(0);
     if (loginForm == null) {
       int index = config.getLoginFormIndex();
       List<HtmlForm> forms = loginPage.getForms();
       ProcessLogger.debug("Login form in login page found(2):" + !forms.isEmpty());
-      if (index >= 0 && forms.size() > index) {
-        loginForm = forms.get(0);
+      if (index >= 0 && forms.size() >= index) {
+        loginForm = forms.get(index - 1);
       }
     }
     if (loginForm == null) {
       throw new IllegalArgumentException("Cannot found the login form.");
     }
     checkRuning();
-    HtmlInput button = loginForm.getInputByName(config.getLoginSubmitBtnName().get());
-    HtmlTextInput userName = loginForm.getInputByName(config.getLoginAuthInputName().get());
+    HtmlInput userName = null, userPass = null;
+    HtmlElement button = null;
+    ProcessLogger.debug(loginPage.asXml());
+    if (config.getLoginAuthInputName().isPresent()) {
+      userName = loginForm.getInputByName(config.getLoginAuthInputName().get());
+    } else if (config.getLoginAuthInputSelector().isPresent()) {
+      userName = loginForm.querySelector(config.getLoginAuthInputSelector().get());
+    }
+    if (config.getLoginAuthPassInputName().isPresent()) {
+      userPass = loginForm.getInputByName(config.getLoginAuthPassInputName().get());
+    } else if (config.getLoginAuthPassInputSelector().isPresent()) {
+      userPass = loginForm.querySelector(config.getLoginAuthPassInputSelector().get());
+    }
+    if (config.getLoginSubmitBtnName().isPresent()) {
+      button = loginForm.getInputByName(config.getLoginSubmitBtnName().get());
+    } else if (config.getLoginSubmitBtnSelector().isPresent()) {
+      button = loginForm.querySelector(config.getLoginSubmitBtnSelector().get());
+    }
+    if (userName == null) {
+      throw new IllegalArgumentException("Cannot found the input name/selector of login name.");
+    }
+    if (userPass == null) {
+      throw new IllegalArgumentException("Cannot found the input name/selector of login password.");
+    }
+    if (button == null) {
+      throw new IllegalArgumentException("Cannot found the input name/selector of login submit.");
+    }
     userName.setValueAttribute(config.getLoginAuthInputValue().get());
-    HtmlPasswordInput userPass = loginForm.getInputByName(config.getLoginAuthPassInputName().get());
     userPass.setValueAttribute(config.getLoginAuthPassInputValue().get());
     ProcessLogger.info("Simulate the login action...");
-    button.click();
+    final HtmlPage afterSubmitPage = button.click();
+    processAfterSubmit(afterSubmitPage, webClient);
     ProcessLogger.info("Login success.");
   }
+
+  protected HtmlPage processBeforeLogin(HtmlPage loginPage, WebClient webClient) {
+    return loginPage;
+  }
+
+  protected void processAfterSubmit(HtmlPage afterSubmitPage, WebClient webClient) {}
 
   protected final void travelWholePages(WebClient webClient) {
     if (config.getCatalogPageUrl().isPresent()) {
